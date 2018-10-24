@@ -14,6 +14,24 @@ tr.example-element-row:not(.example-expanded-row):hover {
     background: #efefef;
   }
 
+  .st-list .card {
+	width: calc(16.66% - 8px);
+	margin-right: 8px;
+	margin-bottom: 1rem;
+}
+
+.st-list label {
+	display: block;
+	font-size: 1rem;
+	color: rgba(0, 0, 0, 0.87);
+	line-height: 1.428572;
+}
+
+  .st-list img, #stCheck img {
+	width: 100%;
+	height: auto;
+}
+
 /* .check {
     background-color: red;
 }

@@ -19,7 +19,8 @@
             "assets": [
               "src/assets",
               "src/description.xml",
-              "src/icon.png"
+              "src/icon.png",
+              "src/signin.html"
             ],
             "styles": [
               "src/styles.css"

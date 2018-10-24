@@ -66,8 +66,9 @@ export class DSAService {
     if (type === "Class") req.Request.ClassID = id;
 
     const rsp = await this.contract.send('rollcall.GetStudents', req);
-
-    return ((rsp && rsp.Students && rsp.Students.Student) || []) as Student[];
+    console.log(rsp);
+    // return ((rsp && rsp.Students && rsp.Students.Student) || []) as Student[];
+    return [].concat((rsp && rsp.Students && rsp.Students.Student) || []).map(function (item) { return item as Student; });
   }
 
   /**
@@ -97,7 +98,7 @@ export class DSAService {
       Student: JSON.stringify(data),
     };
 
-    if(type === 'Course') {
+    if (type === 'Course') {
       req.CourseID = id;
     } else {
       req.ClassID = id;
@@ -108,45 +109,64 @@ export class DSAService {
     return rsp;
   }
 
+  public getAccessPoint() {
+    return this.contract.getAccessPoint;
+  }
+
+  public getSessionID() {
+    return this.contract.getSessionID;
+  }
+
   /**
    * 取得今日日期。
    */
   public getToday() {
     return Moment().format('YYYY/MM/DD');
   }
+
+  public async getSchedule(date: string) {
+    await this.ready;
+
+    const rsp = await this.contract.send('rollcall.GetSchedule', {
+      Request: {
+        OccurDate: date
+      }
+    });
+
+    const courses = [].concat(rsp && rsp.Course || []) as CourseConf[];
+    const schedules = [].concat(rsp && rsp.Schedule || []) as Schedule[];
+    const periods = [].concat(rsp && rsp.Period || []) as PeriodConf[];
+
+    periods.forEach(v => {
+      v.Absence = [].concat(v.Absence || []) as AbsenceConf[];
+    });
+
+    return { CourseConf: courses, PeriodConf: periods, Schedule: schedules }
+  }
 }
 
 export type GroupType = '' | 'Course' | 'Class'
+
 /**
  * 班級課程項目。
  */
 export interface RollCallRecord {
-
   UID: string;
-
   Name: string;
-
   Type: GroupType;
-
   Students: string;
 }
 
 export interface Config {
   Timestamp: string;
-
   Periods: any;
-
   Absences: any;
 }
 
 export interface SuggestRecord {
-
   Checked: string;
-
   CourseID: string;
-
   CourseName: string;
-
   Period: string;
 }
 
@@ -158,6 +178,8 @@ export interface Student {
   Photo: string;
   ClassName: string;
   Attendance: AttendanceItem;
+
+  PhotoUrl: string; //2018/10/24 new
 }
 
 export interface AttendanceItem {
@@ -184,4 +206,42 @@ export interface RollCallCheck {
 
   /** 缺曠類別。 */
   Absence: string;
+}
+
+/** 取得今日點名/建議點名
+ * 並且組織出可點名缺曠別
+ */
+export interface Schedule {
+
+
+  Checked: string;
+  ClassID: string;
+  ClassName: string;
+  CourseID: string;
+  CourseName: string;
+  Period: string;
+  StudentCount: string;
+
+}
+
+export interface PeriodConf {
+  Actor: string;
+  EndTime: string;
+  Name: string;
+  StartTime: string;
+  Type: string;
+
+  Absence: AbsenceConf[];
+
+}
+
+export interface AbsenceConf {
+  Abbr: string;
+  Color: string;
+  Name: string;
+}
+
+export interface CourseConf {
+  CourseID: string;
+  CourseName: string;
 }

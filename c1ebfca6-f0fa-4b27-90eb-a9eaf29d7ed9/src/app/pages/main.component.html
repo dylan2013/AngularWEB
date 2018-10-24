@@ -5,37 +5,41 @@
         </ol>
     </nav>
     <!-- <h3 class="my-3">今日課堂</h3> -->
-    <div class="m-1" *ngIf="!suggests">Loading...</div>
+    <div class="m-1" *ngIf="!conf">Loading...</div>
     <mat-tab-group>
-
-        <mat-tab label="今日課程" class="p-1">
-
+        <mat-tab label="今日點名" class="p-1">
             <div class="d-flex">
 
-                <ng-container *ngIf="loading;else t_table">
+                <ng-container *ngIf="loading;else j_table">
                     <mat-spinner diameter="35"></mat-spinner>
                 </ng-container>
-                <ng-template #t_table>
-                    <table mat-table [dataSource]="courses" class="mat-elevation-z2 m-2 flex-fill">
+                <ng-template #j_table>
+                    <table mat-table [dataSource]="conf.Schedule" class="mat-elevation-z2 m-2 flex-fill">
+
+                        <ng-container matColumnDef="Period">
+                            <th mat-header-cell *matHeaderCellDef>節次</th>
+                            <td mat-cell *matCellDef="let element">{{element.Period}}</td>
+                        </ng-container>
 
                         <ng-container matColumnDef="Name">
-                            <th mat-header-cell *matHeaderCellDef>課程名稱</th>
-                            <td mat-cell *matCellDef="let element">{{element.Name}}</td>
+                            <th mat-header-cell *matHeaderCellDef>名稱(班級/課程)</th>
+                            <td mat-cell *matCellDef="let element">{{element.ClassName?element.ClassName:element.CourseName}}</td>
                         </ng-container>
 
-                        <ng-container matColumnDef="Type">
-                            <th mat-header-cell *matHeaderCellDef>類別</th>
-                            <td mat-cell *matCellDef="let element">{{element.Type=='Class'?'班級':'課程'}}</td>
-                        </ng-container>
-
-                        <ng-container matColumnDef="Students">
+                        <ng-container matColumnDef="StudentCount">
                             <th mat-header-cell *matHeaderCellDef>學生數</th>
-                            <td mat-cell *matCellDef="let element">{{element.Students}}</td>
+                            <td mat-cell *matCellDef="let element">{{element.StudentCount}}</td>
                         </ng-container>
 
-                        <tr mat-header-row *matHeaderRowDef="courseColumns"></tr>
-                        <tr mat-row *matRowDef="let row; columns: courseColumns;" class="example-element-row"
-                            (click)="openPicker(row)"></tr>
+                        <ng-container matColumnDef="Checked">
+                            <th mat-header-cell *matHeaderCellDef>已點名</th>
+                            <td mat-cell *matCellDef="let element">
+                                <mat-icon color="primary">{{element.Checked?'check_circle':'check_circle_outline'}}</mat-icon>
+                            </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="scheduleColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: scheduleColumns;" class="example-element-row" (click)="openSchedule(row)"></tr>
                     </table>
                 </ng-template>
             </div>
@@ -43,47 +47,33 @@
         </mat-tab>
 
         <mat-tab label="建議課程" class="p-1">
+            <div class="mr-auto bd-highlight  p-1">
+                <button mat-raised-button (click)="openSubstitute()" color="primary" class="m-2">
+                    <mat-icon>how_to_reg</mat-icon>代課課程
+                </button>
+            </div>
             <div class="d-flex">
 
-                <ng-container *ngIf="loading;else j_table">
+                <ng-container *ngIf="loading;else t_table">
                     <mat-spinner diameter="35"></mat-spinner>
                 </ng-container>
-                <ng-template #j_table>
-                    <table mat-table [dataSource]="suggests" class="mat-elevation-z2 m-2 flex-fill">
-
-                        <ng-container matColumnDef="Checked">
-                            <th mat-header-cell *matHeaderCellDef>選取</th>
-                            <td mat-cell *matCellDef="let element">{{element.Checked}}</td>
-                        </ng-container>
-
-                        <ng-container matColumnDef="CourseID">
-                            <th mat-header-cell *matHeaderCellDef>系統編號</th>
-                            <td mat-cell *matCellDef="let element">{{element.CourseID}}</td>
-                        </ng-container>
+                <ng-template #t_table>
+                    <table mat-table [dataSource]="conf.CourseConf" class="mat-elevation-z2 m-2 flex-fill">
 
                         <ng-container matColumnDef="CourseName">
                             <th mat-header-cell *matHeaderCellDef>課程名稱</th>
                             <td mat-cell *matCellDef="let element">{{element.CourseName}}</td>
                         </ng-container>
 
-                        <ng-container matColumnDef="Period">
-                            <th mat-header-cell *matHeaderCellDef>節次</th>
-                            <td mat-cell *matCellDef="let element">{{element.Period}}</td>
-                        </ng-container>
 
-                        <tr mat-header-row *matHeaderRowDef="suggestColumns"></tr>
-                        <tr mat-row *matRowDef="let row; columns: suggestColumns;" class="example-element-row"
-                            (click)="openSuggest(row)"></tr>
+                        <tr mat-header-row *matHeaderRowDef="courseColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: courseColumns;" class="example-element-row" (click)="openPicker(row)"></tr>
                     </table>
                 </ng-template>
             </div>
 
         </mat-tab>
 
-        <mat-tab label="代課課程" class="p-1">
-
-
-        </mat-tab>
     </mat-tab-group>
 
 

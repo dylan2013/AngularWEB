@@ -64,4 +64,8 @@ export class Contract {
   public get getAccessPoint(): any {
     return this.contract.getAccessPoint();
   }
+
+  public get getSessionID(): any {
+    return this.contract.getToken().SessionID;
+  }
 }

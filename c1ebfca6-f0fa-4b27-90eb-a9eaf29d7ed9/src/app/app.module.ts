@@ -18,7 +18,7 @@ import { WaitingComponent } from './modal/waiting.component';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatTableModule } from '@angular/material/table';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-
+import { MatIconModule } from '@angular/material/icon';
 @NgModule({
   declarations: [
     AppComponent,
@@ -35,7 +35,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     AppRoutingModule,
     MatTabsModule,
     MatProgressSpinnerModule,
-    MatTableModule
+    MatTableModule,
+    MatIconModule
   ],
   providers: [GadgetService, DSAService, ConfigService, AlertService],
   bootstrap: [AppComponent],

@@ -5,6 +5,8 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MenuPositionX } from '@angular/material/menu';
 import { StudentCheck } from './student-check';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+import { GadgetService } from '../service/gadget.service';
 
 @Component({
   selector: 'gd-student-pick',
@@ -30,7 +32,8 @@ export class StudentPickComponent implements OnInit {
     private route: ActivatedRoute,
     private alert: AlertService,
     private config: ConfigService,
-    private change: ChangeDetectorRef
+    private change: ChangeDetectorRef,
+    private gadget: GadgetService
   ) {
     this.today = dsa.getToday();
   }
@@ -55,12 +58,12 @@ export class StudentPickComponent implements OnInit {
       // 可點節次。
       this.periodConf = this.config.getPeriod(period);
       this.periodConf.Absence = [].concat(this.periodConf.Absence) || [];
-      
+
       try {
         // 學生清單（含點名資料）。 
         await this.reloadStudentAttendances();
       } catch(error) {
-        this.alert.json(error);
+        this.alert.json(error.message);
       }
     });
   }
@@ -69,13 +72,23 @@ export class StudentPickComponent implements OnInit {
   public async reloadStudentAttendances(msg?: string) {
     const students = await this.dsa.getStudents(this.groupInfo.type, this.groupInfo.id, this.today);
     this.studentChecks = [];
+
+    const c = await  this.gadget.getContract("1campus.mobile.v2.teacher");
+    const session = await c.send("DS.Base.Connect", {RequestSessionID: ''});
+    console.log(session.SessionID);
+
     for (const stu of students) {
+
+      // 取得學生照片 url
+      stu.PhotoUrl = `${this.dsa.getAccessPoint()}/GetStudentPhoto?stt=Session&sessionid=${session.SessionID}&parser=spliter&content=StudentID:${stu.ID}`;
       const status = this.getSelectedAttendance(stu);
       this.studentChecks.push(new StudentCheck(stu, status, this.periodConf));
+
+      // console.log(stu.PhotoUrl);
     }
     this.calcSummaryText();
 
-    if(msg) this.alert.snack(msg);
+    if (msg) this.alert.snack(msg);
   }
 
   changeAttendance(stu: StudentCheck) {
