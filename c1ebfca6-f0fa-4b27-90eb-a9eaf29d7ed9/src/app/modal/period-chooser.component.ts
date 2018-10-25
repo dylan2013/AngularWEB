@@ -1,7 +1,7 @@
 import { Router } from '@angular/router';
 import { MatDialogRef } from '@angular/material/dialog';
 import { ConfigService, PeriodConf } from './../service/config.service';
-import { DSAService, RollCallRecord } from './../service/dsa.service';
+import { DSAService, RollCallRecord, CourseConf } from './../service/dsa.service';
 import { Component, OnInit, Inject, ViewEncapsulation } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
@@ -13,7 +13,7 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 })
 export class PeriodChooserComponent implements OnInit {
 
-  title; 
+  title;
 
   periods: PeriodConf[];
 
@@ -21,10 +21,10 @@ export class PeriodChooserComponent implements OnInit {
     private router: Router,
     private config: ConfigService,
     public dialogRef: MatDialogRef<PeriodChooserComponent>,
-    @Inject(MAT_DIALOG_DATA) private data: {course: RollCallRecord}
+    @Inject(MAT_DIALOG_DATA) private data: { course: CourseConf }
   ) {
 
-    this.title = data.course.Name;
+    this.title = data.course.CourseName;
 
     dialogRef.updateSize('650px');
   }
@@ -35,7 +35,10 @@ export class PeriodChooserComponent implements OnInit {
   }
 
   gotoPick(period) {
-    this.router.navigate(['../pick',this.data.course.Type, this.data.course.UID, period.Name], {
+    //Type 傳入是課程還是班級
+    //CourseName
+    //PeriodName
+    this.router.navigate(['../pick', "Course", this.data.course.CourseID, period.Name], {
       queryParams: { DisplayName: this.title }
     });
     this.dialogRef.close();
@@ -43,6 +46,6 @@ export class PeriodChooserComponent implements OnInit {
 
   // 該節是否可以點名。
   allow_choose(period: PeriodConf) {
-    return period.Absence.length<=0
+    return period.Absence.length <= 0
   }
 }

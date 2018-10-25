@@ -143,6 +143,24 @@ export class DSAService {
 
     return { CourseConf: courses, PeriodConf: periods, Schedule: schedules }
   }
+
+  public async getAllCourse() {
+    await this.ready;
+    const rsp = await this.contract.send('rollcall.GetAllCourse');
+    const gradeYears = [].concat(rsp && rsp.GradeYear || []) as GradeYearObj[];
+
+    gradeYears.forEach(v => {
+
+      v.jClass = [].concat(v.jClass || []) as ClassObj[];
+
+      v.jClass.forEach(v => {
+        v.Course = [].concat(v.Course || []) as CourseObj[];
+      });
+
+    });
+
+    return gradeYears;
+  }
 }
 
 export type GroupType = '' | 'Course' | 'Class'
@@ -244,4 +262,25 @@ export interface AbsenceConf {
 export interface CourseConf {
   CourseID: string;
   CourseName: string;
+}
+
+export interface GradeYearObj {
+  GradeYear: string;
+  jClass: ClassObj[];
+
+}
+
+export interface ClassObj {
+  ClassID: string;
+  ClassName: string;
+  Course: CourseObj[];
+
+}
+export interface CourseObj {
+  CourseID: string;
+  CourseName: string;
+  Credit: string;
+  Subject: string;
+  TeacherID: string;
+  TeacherName: string;
 }

@@ -2,12 +2,13 @@ import { ConfigService } from './../service/config.service';
 import { PeriodChooserComponent } from './../modal/period-chooser.component';
 import { AlertService } from './../service/alert.service';
 import { DebugComponent } from './../modal/debug.component';
-import { DSAService, RollCallRecord, SuggestRecord, PeriodConf, AbsenceConf, Schedule } from './../service/dsa.service';
+import { DSAService, RollCallRecord, SuggestRecord, PeriodConf, AbsenceConf, Schedule, CourseConf } from './../service/dsa.service';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 
 import * as moment from 'moment';
+import { SubstituteComponent } from './substitute.component';
 
 @Component({
   selector: 'gd-main',
@@ -72,7 +73,9 @@ export class MainComponent implements OnInit {
   }
 
   //開啟節次點名介面
-  async openPicker(course: RollCallRecord) {
+  async openPicker(course: CourseConf) {
+
+    console.log(course);
 
     this.dialog.open(PeriodChooserComponent, {
       data: { course: course },
@@ -81,8 +84,6 @@ export class MainComponent implements OnInit {
 
   //開啟代課清單
   async openSubstitute() {
-
-
-
+    this.router.navigate(['../sub']); 
   }
 }
