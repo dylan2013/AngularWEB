@@ -123,7 +123,6 @@ a.text-green:active,a.text-green:focus, a.text-green:hover {
 ----------------------------------------------------- */
 
 .st-list .card {
-	line-height: normal;
 	cursor: pointer;
 	height: 100%;
 }

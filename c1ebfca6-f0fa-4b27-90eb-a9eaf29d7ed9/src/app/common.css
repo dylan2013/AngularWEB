@@ -8,28 +8,37 @@ table {
 
 tr.example-element-row:not(.example-expanded-row):hover {
     background: #f5f5f5;
-  }
-  
-  tr.example-element-row:not(.example-expanded-row):active {
-    background: #efefef;
-  }
+}
 
-  .st-list .card {
-	width: calc(16.66% - 8px);
-	margin-right: 8px;
-	margin-bottom: 1rem;
+tr.example-element-row:not(.example-expanded-row):active {
+    background: #efefef;
+}
+
+.st-list .card {
+    width: calc(16.66% - 8px);
+    margin-right: 8px;
+    margin-bottom: 1rem;
 }
 
 .st-list label {
-	display: block;
-	font-size: 1rem;
-	color: rgba(0, 0, 0, 0.87);
-	line-height: 1.428572;
+    display: block;
+    font-size: 1rem;
+    color: rgba(0, 0, 0, 0.87);
+    line-height: 1.428572;
 }
 
-  .st-list img, #stCheck img {
-	width: 100%;
-	height: auto;
+.st-list img, #stCheck img {
+    width: 100%;
+    height: auto;
+}
+
+.dy-header-cell {
+    font-size: 18px;
+    background-color: #eeeeee;
+}
+
+.dy-fone-size {
+    font-size: 18px;
 }
 
 /* .check {
