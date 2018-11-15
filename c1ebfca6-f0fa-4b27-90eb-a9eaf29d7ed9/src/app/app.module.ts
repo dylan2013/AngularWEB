@@ -20,6 +20,10 @@ import { MatTableModule } from '@angular/material/table';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
 import { SubstituteComponent } from './pages/substitute.component';
+import { CourseSelcComponent } from './pages/course-selc.component';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { FormsModule } from "@angular/forms";
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -29,6 +33,7 @@ import { SubstituteComponent } from './pages/substitute.component';
     DebugComponent,
     WaitingComponent,
     SubstituteComponent,
+    CourseSelcComponent
   ],
   imports: [
     BrowserModule,
@@ -38,7 +43,9 @@ import { SubstituteComponent } from './pages/substitute.component';
     MatTabsModule,
     MatProgressSpinnerModule,
     MatTableModule,
-    MatIconModule
+    MatIconModule,
+    MatCheckboxModule,
+    FormsModule
   ],
   providers: [GadgetService, DSAService, ConfigService, AlertService],
   bootstrap: [AppComponent],

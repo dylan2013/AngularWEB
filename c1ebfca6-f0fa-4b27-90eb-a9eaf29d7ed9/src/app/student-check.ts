@@ -1,5 +1,5 @@
-import { PeriodConf } from "../service/config.service";
-import { Student, PeriodStatus, RollCallCheck } from "../service/dsa.service";
+import { PeriodConf } from "./service/config.service";
+import { Student, PeriodStatus, RollCallCheck } from "./service/dsa.service";
 
 /** 學生點名狀態。 */
 export class StudentCheck {

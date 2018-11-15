@@ -1,12 +1,13 @@
 import { ConfigService, AbsenceConf, PeriodConf } from './../service/config.service';
 import { AlertService } from './../service/alert.service';
 import { DSAService, Student, AttendanceItem, PeriodStatus, GroupType, RollCallCheck } from './../service/dsa.service';
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, OnInit, ChangeDetectorRef, ViewChild, TemplateRef } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MenuPositionX } from '@angular/material/menu';
-import { StudentCheck } from './student-check';
+import { StudentCheck } from '../student-check';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
-import { GadgetService } from '../service/gadget.service';
+import { GadgetService, Contract } from '../service/gadget.service';
+import { MatDialog, MatTableDataSource, MatPaginator } from '@angular/material';
 
 @Component({
   selector: 'gd-student-pick',
@@ -27,41 +28,53 @@ export class StudentPickComponent implements OnInit {
 
   checkSummary: string; // 目前點名狀態統計。
 
+  isSendMessage: string;
+  CanSend: boolean;
+
+  contract: Contract;
+
+  displayedColumns: string[] = ['PeriodName', 'IsSend'];
+
+  dataSource: any[];
+  dataSource1: MatTableDataSource<any>;
+
+  @ViewChild('t_message') viewMessage: TemplateRef<any>;
+  @ViewChild('t_period') viewPeriod: TemplateRef<any>;
+  
   constructor(
     private dsa: DSAService,
     private route: ActivatedRoute,
     private alert: AlertService,
     private config: ConfigService,
     private change: ChangeDetectorRef,
-    private gadget: GadgetService
+    private router: Router,
+    private gadget: GadgetService,
+    private dialog: MatDialog
   ) {
     this.today = dsa.getToday();
   }
 
   async ngOnInit() {
 
+    this.CanSend = true;
     this.groupInfo = { type: '', id: '', name: '' };
 
     await this.config.ready;
-
-    // 取得前一頁傳來的資料。
-    this.route.queryParamMap.subscribe(p => {
-      // 課程名稱或班級名稱。
-      this.groupInfo.name = p.get('DisplayName');
-    });
-
     this.route.paramMap.subscribe(async pm => {
       this.groupInfo.type = pm.get('type') as GroupType; // course or class
       this.groupInfo.id = pm.get('id'); // course id
-      const period = pm.get('p'); // period name
+      const period = pm.get('period'); // period name
+      this.groupInfo.name = pm.get('name');
 
       // 可點節次。
       this.periodConf = this.config.getPeriod(period);
-      this.periodConf.Absence = [].concat(this.periodConf.Absence) || [];
+      this.periodConf.Absence = [].concat(this.periodConf.Absence || []);
 
       try {
         // 學生清單（含點名資料）。 
         await this.reloadStudentAttendances();
+
+
       } catch (error) {
         this.alert.json(error.message);
       }
@@ -69,7 +82,41 @@ export class StudentPickComponent implements OnInit {
       // 當有假別預設選第1個
       if (this.periodConf.Absence.length > 0) {
         this.selectedAbsence = this.periodConf.Absence[0].Name;
+
+        //是否支援推播功能
+        this.isSendMessage = this.periodConf.Absence[0].IsSendMessage;
+        console.log(this.periodConf);
+        console.log(this.isSendMessage);
+        if (this.isSendMessage == "t") {
+
+          console.log("yes");
+
+        }
+        else {
+          console.log("no");
+
+        }
       }
+
+      let Periods: PeriodConf[] = this.config.getPeriods();
+      for (let p of Periods) {
+        p.Absence = [].concat(p.Absence || []);
+      }
+      this.dataSource = [];
+      console.log(Periods);
+      for (let period of Periods) {
+        if (period.Absence.length > 0) {
+
+          let x :colper = <colper>{PeriodName: period.Name, IsSend:period.Absence[0].IsSendMessage};
+          this.dataSource.push(x);
+
+        }
+
+      }
+
+
+      this.dataSource1 = new MatTableDataSource(this.dataSource);
+
     });
   }
 
@@ -140,13 +187,13 @@ export class StudentPickComponent implements OnInit {
   }
 
   getAttendanceText(stu: StudentCheck) {
-    return stu.status ? stu.status.AbsenceType : 'Check';
+    return stu.status ? stu.status.AbsenceType : '- -';
   }
 
   getAttendanceStyle(stu: StudentCheck) {
 
-    let bgColor = 'white';
-    let fgColor = 'rgba(0,0,0,.12)';
+    let bgColor = 'rgba(255,255,255, 0.1)';
+    let fgColor = 'rgba(0,0,0,0.5)';
 
     if (stu.status) {
       const absType = stu.status.AbsenceType;
@@ -174,6 +221,9 @@ export class StudentPickComponent implements OnInit {
     return dateAtts.find(v => v['@text'] === period);
   }
 
+  //開始儲存資料
+  //若是第一節,則發送一則推播給家長
+  //若是最後一節,也發送一則給家長
   async saveRollCall() {
 
     const items: RollCallCheck[] = [];
@@ -186,12 +236,97 @@ export class StudentPickComponent implements OnInit {
 
     try {
       await this.dsa.setRollCall(this.groupInfo.type, this.groupInfo.id, this.periodConf.Name, items);
-      await this.reloadStudentAttendances();
+      // await this.reloadStudentAttendances();
+      this.router.navigate(['/main']);
     } catch (error) {
       this.alert.json(error);
     } finally {
+
       dialog.close();
+
+      if (this.periodConf.Absence[0].IsSendMessage) {
+
+        console.log("缺曠別:" + this.periodConf.Name + " 將會發送推播");
+
+        console.log(this.CanSend);
+
+        if (this.CanSend) {
+          var breakfast = ["54159"]; //組織出學生ID清單
+          let message: string = "貴子弟『牛小佳』於『2018/11/14』<br>節次『升旗』被記錄為『遲到』<br>--已向校方請假可忽略此通知--<br>--感謝您關心孩子的最新狀態--";
+          this.SendMessage("課堂點名", message, breakfast)
+        }
+
+      } else {
+
+        console.log("不需發送推播");
+
+      }
     }
 
   }
+
+  selectedAbsenceItem(abbr) {
+    console.log(abbr);
+    this.selectedAbsence = abbr.Name;
+  }
+
+  public async SendMessage(eTitle: string, eMessage: string, eTargetStudent: string[]) {
+
+    try {
+      this.contract = await this.gadget.getContract('1campus.notice.teacher.v17');
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+
+    // <Request>
+    // <Title>上課準備</Title>
+    // <Message>明天上課請準備說故事</Message>
+    // <TargetStudent>54156</TargetStudent><!--TargetStudent是通知對象學生的StudentID-->
+    // </Request>
+    const req: any = {
+      Request: {
+        Title: eTitle,
+        Message: eMessage,
+        TargetStudent: eTargetStudent
+      }
+    };
+
+    console.log(req);
+
+    const rsp = await this.contract.send('PushNotice', req);
+    console.log(rsp);
+  }
+
+  //開啟一個小畫面
+  //顯示會發送的範本樣式
+  private viewTemp1() {
+
+    this.dialog.open(this.viewMessage);
+
+  }
+
+  private viewTemp2() {
+
+   this.dialog.open(this.viewPeriod);
+
+  }
+}
+
+export class colper {
+
+  public PeriodName: string;
+
+  public IsSend: string;
+}
+
+export interface AttendanceMessage {
+  //標題
+  Title: string;
+
+  //訊息內容
+  Message: string;
+
+  //對象
+  TargetStudent: string;
 }

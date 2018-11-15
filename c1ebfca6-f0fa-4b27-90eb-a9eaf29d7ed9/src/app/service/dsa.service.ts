@@ -141,7 +141,7 @@ export class DSAService {
       v.Absence = [].concat(v.Absence || []) as AbsenceConf[];
     });
 
-    return { CourseConf: courses, PeriodConf: periods, Schedule: schedules }
+    return { CourseConf: courses, PeriodConf: periods, Schedule: schedules } as ConfigData
   }
 
   public async getAllCourse() {
@@ -151,9 +151,9 @@ export class DSAService {
 
     gradeYears.forEach(v => {
 
-      v.jClass = [].concat(v.jClass || []) as ClassObj[];
+      v.Class = [].concat(v.Class || []) as ClassObj[];
 
-      v.jClass.forEach(v => {
+      v.Class.forEach(v => {
         v.Course = [].concat(v.Course || []) as CourseObj[];
       });
 
@@ -164,6 +164,8 @@ export class DSAService {
 }
 
 export type GroupType = '' | 'Course' | 'Class'
+
+export type ConfigData = { CourseConf: CourseConf[], PeriodConf: PeriodConf[], Schedule: Schedule[] };
 
 /**
  * 班級課程項目。
@@ -248,7 +250,7 @@ export interface PeriodConf {
   Name: string;
   StartTime: string;
   Type: string;
-
+  IsSendMessage: boolean;
   Absence: AbsenceConf[];
 
 }
@@ -266,7 +268,7 @@ export interface CourseConf {
 
 export interface GradeYearObj {
   GradeYear: string;
-  jClass: ClassObj[];
+  Class: ClassObj[];
 
 }
 
@@ -274,7 +276,6 @@ export interface ClassObj {
   ClassID: string;
   ClassName: string;
   Course: CourseObj[];
-
 }
 export interface CourseObj {
   CourseID: string;

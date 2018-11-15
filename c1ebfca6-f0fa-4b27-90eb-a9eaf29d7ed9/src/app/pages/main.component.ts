@@ -2,11 +2,10 @@ import { ConfigService } from './../service/config.service';
 import { PeriodChooserComponent } from './../modal/period-chooser.component';
 import { AlertService } from './../service/alert.service';
 import { DebugComponent } from './../modal/debug.component';
-import { DSAService, RollCallRecord, SuggestRecord, PeriodConf, AbsenceConf, Schedule, CourseConf } from './../service/dsa.service';
+import { DSAService, RollCallRecord, SuggestRecord, PeriodConf, AbsenceConf, Schedule, CourseConf, ConfigData } from './../service/dsa.service';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-
 import * as moment from 'moment';
 import { SubstituteComponent } from './substitute.component';
 
@@ -24,7 +23,7 @@ export class MainComponent implements OnInit {
 
   today: string; // 今日。
   periodConfs: PeriodConf[];
-  conf;
+  conf: ConfigData;
 
   constructor(
     private dsa: DSAService,
@@ -66,24 +65,21 @@ export class MainComponent implements OnInit {
     const md1 = schedule.ClassID ? 'Class' : 'Course';
     const md2 = schedule.ClassID ? schedule.ClassID : schedule.CourseID;
     const md3 = schedule.Period;
+    const md4 = schedule.ClassID ? schedule.ClassName : schedule.CourseName;
 
-    this.router.navigate(['../pick', md1, md2, md3], {
-      queryParams: { DisplayName: schedule.CourseName }
-    });
+    this.router.navigate(['/pick', md1, md2, md3, md4]);
   }
 
   //開啟節次點名介面
   async openPicker(course: CourseConf) {
-
-    console.log(course);
-
+    // console.log(course);
     this.dialog.open(PeriodChooserComponent, {
-      data: { course: course },
+      data: { course: course, period: this.conf.PeriodConf },
     });
   }
 
   //開啟代課清單
   async openSubstitute() {
-    this.router.navigate(['../sub']); 
+    this.router.navigate(['../sub']);
   }
 }

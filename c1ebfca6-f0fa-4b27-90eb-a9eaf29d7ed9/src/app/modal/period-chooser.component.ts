@@ -38,14 +38,18 @@ export class PeriodChooserComponent implements OnInit {
     //Type 傳入是課程還是班級
     //CourseName
     //PeriodName
-    this.router.navigate(['../pick', "Course", this.data.course.CourseID, period.Name], {
-      queryParams: { DisplayName: this.title }
-    });
+    this.router.navigate(['../pick', "Course",
+      this.data.course.CourseID, period.Name,
+      this.data.course.CourseName]);
     this.dialogRef.close();
   }
 
   // 該節是否可以點名。
   allow_choose(period: PeriodConf) {
-    return period.Absence.length <= 0
+    if (period.Absence) {
+      return period.Absence.length <= 0
+    } else {
+      return 0;
+    }
   }
 }

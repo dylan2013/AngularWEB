@@ -81,6 +81,8 @@ export interface AbsenceConf {
 
   /** 顏色代碼。 */
   Color: string;
+
+  IsSendMessage: string;
 }
 
 /** 節次設定。 */

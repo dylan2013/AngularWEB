@@ -1,10 +1,62 @@
 <div>
     <nav aria-label="breadcrumb text-nowrap text-truncate">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item active" aria-current="page">課堂點名（{{today}}）</li>
+            <li class="breadcrumb-item active d-flex" aria-current="page" style="width: 100%">
+                <div>課堂點名（{{today}})</div>
+                <div style="flex: 1"></div>
+                <button (click)=openSubstitute() type="button" class="btn btn-lg btn-info">代課課程</button>
+            </li>
         </ol>
     </nav>
 
+    <ul class="list-group mb-3 point" *ngIf="!loading;else Loading">
+        <li *ngIf="conf.Schedule && conf.Schedule.length" class="list-group-item active d-flex align-items-center py-2 ">
+
+            <div class="col-9 col-md-10 text-nowrap">
+                <span class="pr-3">今日點名</span>
+            </div>
+            <div class="col-2 col-md-1 text-nowrap text-center">節次</div>
+            <div class="col-1 text-center">已點名</div>
+        </li>
+        <li class="list-group-item " *ngFor="let suggest of conf.Schedule" (click)="openSchedule(suggest)">
+            <div class="row">
+                <div class="col-9 col-md-10 text-nowrap">
+                    <span class="pr-3">{{suggest.ClassName?suggest.ClassName:suggest.CourseName}}</span>
+                </div>
+                <div class="col-2 col-md-1 text-nowrap text-center">{{suggest.Period}}</div>
+                <div class="col-1 text-center">
+                    <ng-container *ngIf="suggest.Checked=='true'">
+                        <i class="material-icons" style="color:#33691E">
+                            check_circle
+                        </i>
+                    </ng-container>
+                    <ng-container *ngIf="suggest.Checked!='true'">
+                        <i class="material-icons" style="color:#C9C9C9">
+                            check_circle_outline
+                        </i>
+                    </ng-container>
+                </div>
+            </div>
+        </li>
+        <li *ngIf="conf.CourseConf && conf.CourseConf.length" class="list-group-item active d-flex align-items-center py-2 ">
+            <div>課程</div>
+        </li>
+        <li class="list-group-item " *ngFor="let course of conf.CourseConf" (click)="openPicker(course)">
+            <div class="row">
+                <div class="col-md-4 col-lg-3 text-nowrap">
+                    <span class="pr-3">{{course.CourseName}}</span>
+                </div>
+            </div>
+        </li>
+    </ul>
+
+    <ng-template #Loading>
+        <div style="position:absolute;top:40%;left: 0px;right: 0px;text-align: center;">
+            loading...
+        </div>
+    </ng-template>
+
+    <!-- 
     <h3>今日點名</h3>
     <div class="d-flex">
 
@@ -68,6 +120,6 @@
 
     <ng-template #save>
         <button type="button" class="btn btn-lg btn-info" (click)="openSubstitute()"><mat-icon>how_to_reg</mat-icon> 代課課程</button>
-    </ng-template>
+    </ng-template> -->
 
 </div>

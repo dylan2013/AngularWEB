@@ -3,52 +3,74 @@
   <nav aria-label="breadcrumb text-nowrap text-truncate">
     <ol class="breadcrumb">
       <li class="breadcrumb-item">
-        <a href="#" [routerLink]="['../../../..']">課堂點名（{{today}}）</a>
+        <a href="#" [routerLink]="['/main']">課堂點名</a>
       </li>
       <ng-container *ngIf="!studentChecks; else titleText">
         <li class="breadcrumb-item active" aria-current="page">loading...</li>
       </ng-container>
       <ng-template #titleText>
-        <li class="breadcrumb-item active" aria-current="page">{{groupInfo.name}}&nbsp;&nbsp;(節次：{{periodConf?.Name}})</li>
+        <li class="breadcrumb-item active" aria-current="page">{{groupInfo.name}}&nbsp;&nbsp;({{today}}：{{periodConf?.Name}})</li>
       </ng-template>
     </ol>
+    <div class="alert alert-info fade show" role="alert" *ngIf="isSendMessage=='t'">
+      <div class="d-flex flex-column">
+
+        <div>本節次支援課堂點名 即時推播</div>
+        <div>即時推播 會推送點名結果給學生家長(包含已到學生)</div>
+        <div class="m-2">
+          <mat-checkbox *ngIf="isSendMessage=='t'" [(ngModel)]="CanSend">發送點名結果給家長(取消勾選,則不會發送推播)</mat-checkbox>
+        </div>
+        <div class="flex-column">
+          <div><a href="javascript: void(0)" (click)="viewTemp1()">*.查看發送訊息樣板</a></div>
+          <div><a href="javascript: void(0)" (click)="viewTemp2()">*.查看校定可發送推播之節次</a></div>
+        </div>
+      </div>
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
   </nav>
 
   <ng-container *ngIf="!studentChecks; else elseTemplate">
-    <div>loading...</div>
+    <div style="position:absolute;top:30%;left: 0px;right: 0px;text-align: center;">
+      loading...
+    </div>
   </ng-container>
   <ng-template #elseTemplate>
-    <div class="d-flex flex-column-reverse flex-sm-row">
+    <div class="d-flex flex-column-reverse flex-sm-row mb-3">
       <div class="btn-group dropdown mr-auto">
         <button [matMenuTriggerFor]="menu" type="button" class="btn btn-dark dropdown-toggle" data-toggle="dropdown"
           aria-haspopup="true" aria-expanded="false">
           <span *ngIf="!selectedAbsence">選擇假別</span>
-          <span *ngIf="selectedAbsence">假別：{{selectedAbsence}}</span>
+          <span *ngIf="selectedAbsence">{{selectedAbsence}}</span>
         </button>
         <mat-menu #menu="matMenu">
           <div *ngIf="!periodConf">loading...</div>
-          <button mat-menu-item *ngFor="let abb of periodConf?.Absence" (click)="selectedAbsence = abb.Name">{{abb?.Name}}</button>
+          <button mat-menu-item *ngFor="let abb of periodConf?.Absence" (click)="selectedAbsenceItem(abb)">{{abb.Name}}</button>
         </mat-menu>
       </div>
       <!-- <ng-container [ngTemplateOutlet]="reload"></ng-container> -->
       <ng-container [ngTemplateOutlet]="save"></ng-container>
     </div>
 
-    <div class="st-list d-flex flex-wrap mt-3 mt-lg-1">
-      <div *ngFor="let student of studentChecks" (click)="changeAttendance(student)" class="card st-check">
-        <img src="{{student.data.PhotoUrl}}" />
-        <div [ngStyle]="getAttendanceStyle(student)" class="ad-status text-truncate">{{getAttendanceText(student)}}</div>
-        <div class="card-body py-2 text-truncate">
-          <h5 class="mb-0 text-truncate">{{student.data?.Name}}</h5>
-          <div class="text-gray text-truncate d-flex">{{student.data?.StudentNumber}}
-            <span class="ml-auto">{{student.data?.ClassName}}&nbsp;&nbsp;{{student.data?.SeatNo}}</span>
+    <div class="d-flex flex-wrap mt-3 mt-lg-1">
+      <div *ngFor="let student of studentChecks" class="col-xs-12 col-sm-4 col-lg-3 col-xl-2 p-2">
+        <div class="card st-check w-100" style="height: 22em;background-position: center;background-size: cover;"
+          [ngStyle]="{ 'background-image': 'url('+ student.data.PhotoUrl +')'}" (click)="changeAttendance(student)">
+          <div style="position:absolute;bottom:0px;width:100%;">
+            <div [ngStyle]="getAttendanceStyle(student)" class="w-100 ad-status text-truncate">{{getAttendanceText(student)}}</div>
+            <div class="card-body py-2 text-truncate w-100" style="background-color:rgba(255,255,255,0.8)">
+              <h5 class="mb-0 text-truncate">{{student.data?.Name}}</h5>
+              <div class="text-gray text-truncate d-flex">{{student.data?.StudentNumber}}
+                <span class="ml-auto">{{student.data?.ClassName}}&nbsp;&nbsp;{{student.data?.SeatNo}}</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
 
     <div class="text-right">
-      <!-- <ng-container [ngTemplateOutlet]="reload"></ng-container> -->
       <ng-container [ngTemplateOutlet]="save"></ng-container>
     </div>
   </ng-template>
@@ -58,7 +80,40 @@
       +')': '儲存'}}</button>
   </ng-template>
 
-  <ng-template #reload>
-    <button (click)="reloadStudentAttendances('重新載入完成！')" type="button" class="btn btn-lg btn-light mr-sm-1">重新載入</button>
+  <ng-template #t_message>
+    <ng-container>
+      <div>點名未到：</div>
+      <div class="card p-2 m-2">
+        <div>貴子弟『王同學』於『2015/05/11』</div>
+        <div>節次『升旗』被記錄為『遲到』</div>
+        <div>--已向校方請假可忽略此通知--</div>
+        <div>--感謝您關心孩子的最新狀態--</div>
+      </div>
+      <div>點名已到：</div>
+      <div class="card p-2 m-2">
+        <div>貴子弟『王同學』於『2019/03/10』</div>
+        <div>節次『升旗』點名狀態為『已到』</div>
+        <div>--感謝您關心孩子的最新狀態--</div>
+      </div>
+    </ng-container>
+  </ng-template>
+  <ng-template #t_period>
+    <ng-container>
+      <table mat-table [dataSource]="dataSource1" class="mat-elevation-z8">
+
+        <ng-container matColumnDef="PeriodName">
+          <th mat-header-cell *matHeaderCellDef>節次名稱</th>
+          <td mat-cell *matCellDef="let element"> {{element.PeriodName}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="IsSend">
+          <th mat-header-cell *matHeaderCellDef>可否推播</th>
+          <td mat-cell *matCellDef="let element"> {{element.IsSend=='t'?'可發送':'無'}} </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </ng-container>
   </ng-template>
 </div>

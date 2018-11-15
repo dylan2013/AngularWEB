@@ -1,38 +1,44 @@
 <!-- 開始點名 -->
-<div id="attendence-page" page>
+<div>
   <nav aria-label="breadcrumb text-nowrap text-truncate">
     <ol class="breadcrumb">
       <li class="breadcrumb-item">
         <a href="#" [routerLink]="['']">課堂點名（{{today}}）</a>
       </li>
-        <ng-container *ngIf="loading; else titleText">
-            <li class="breadcrumb-item active" aria-current="sub">loading...</li>
-          </ng-container>
-          <ng-template #titleText>
-            <li class="breadcrumb-item active" aria-current="sub">請選擇年級/班級</li>
-          </ng-template>
+      <ng-container *ngIf="loading; else titleText">
+        <li class="breadcrumb-item active" aria-current="sub">loading...</li>
+      </ng-container>
+      <ng-template #titleText>
+        <li class="breadcrumb-item active" aria-current="sub">請選擇年級/班級</li>
+      </ng-template>
     </ol>
   </nav>
 
   <ng-container *ngIf="loading; else gradeYearAndCourse">
-    <mat-spinner diameter="35"></mat-spinner>
+    <div style="position:absolute;top:40%;left: 0px;right: 0px;text-align: center;">
+      loading...
+    </div>
   </ng-container>
+
   <ng-template #gradeYearAndCourse>
 
-    <!-- 開始建立 年級與班級資料-->
-    <table mat-table [dataSource]="gradeYeares" class="mat-elevation-z2 m-2 flex-fill">
+    <ul class="list-group mb-3" *ngFor="let grade of gradeYeares">
+      <li class="list-group-item active d-flex align-items-center py-2 ">
+        <!-- 顯示年級 -->
+        <div class="col-9 col-md-10 text-nowrap">
+          <span class="pr-3">{{grade.GradeYear?grade.GradeYear+"年級":"未分年級"}} (班級:{{grade.Class.length}})</span>
+        </div>
+      </li>
+      <li class="list-group-item point" style="display: flex;flex-wrap: wrap; justify-content: flex-start">
+        <!-- 顯示班級 -->
 
-        <ng-container matColumnDef="GradeYear">
-            <th mat-header-cell *matHeaderCellDef class="dy-header-cell">年級</th>
-            <td mat-cell *matCellDef="let element" class="dy-fone-size">{{element.GradeYear}}</td>
-        </ng-container>
-
-        <tr mat-header-row *matHeaderRowDef="yearColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: yearColumns;" class="example-element-row" ></tr>
-    </table>
-
+        <div *ngFor="let tClass of grade.Class" class="m-1">
+          <div class="col-md-2 col-lg-1 text-nowrap" (click)=openClass(tClass)>
+            <button mat-raised-button style="width: 200px; font-size:16px">{{tClass.ClassName?tClass.ClassName:"未分班級"}} (課程:{{tClass.Course.length}})</button>
+          </div>
+        </div>
+      </li>
+    </ul>
   </ng-template>
-
-
 
 </div>
