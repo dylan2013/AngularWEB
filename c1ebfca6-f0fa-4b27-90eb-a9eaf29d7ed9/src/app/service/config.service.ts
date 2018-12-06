@@ -82,7 +82,9 @@ export interface AbsenceConf {
   /** 顏色代碼。 */
   Color: string;
 
-  IsSendMessage: string;
+  IsSendMessage: string; //課堂點名
+
+  IsSendClassRollcall:string; //到離校推播
 }
 
 /** 節次設定。 */

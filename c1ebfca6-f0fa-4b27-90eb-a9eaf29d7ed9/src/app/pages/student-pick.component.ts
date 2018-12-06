@@ -16,31 +16,24 @@ import { MatDialog, MatTableDataSource, MatPaginator } from '@angular/material';
 })
 export class StudentPickComponent implements OnInit {
 
+  contract: Contract;
+
   today: string;
-
   periodConf: PeriodConf; // 節次設定，決定有哪些缺曠可以點。
-
   selectedAbsence: string; // 已選擇的缺曠類別。
-
   groupInfo: { type: GroupType, id: string, name: string } // 課程或班級。
-
   studentChecks: StudentCheck[]; //點名狀態。
-
   checkSummary: string; // 目前點名狀態統計。
 
   isSendMessage: string;
   CanSend: boolean;
-
-  contract: Contract;
-
   displayedColumns: string[] = ['PeriodName', 'IsSend'];
-
   dataSource: any[];
   dataSource1: MatTableDataSource<any>;
 
   @ViewChild('t_message') viewMessage: TemplateRef<any>;
   @ViewChild('t_period') viewPeriod: TemplateRef<any>;
-  
+
   constructor(
     private dsa: DSAService,
     private route: ActivatedRoute,
@@ -85,8 +78,6 @@ export class StudentPickComponent implements OnInit {
 
         //是否支援推播功能
         this.isSendMessage = this.periodConf.Absence[0].IsSendMessage;
-        console.log(this.periodConf);
-        console.log(this.isSendMessage);
         if (this.isSendMessage == "t") {
 
           console.log("yes");
@@ -103,15 +94,13 @@ export class StudentPickComponent implements OnInit {
         p.Absence = [].concat(p.Absence || []);
       }
       this.dataSource = [];
-      console.log(Periods);
       for (let period of Periods) {
         if (period.Absence.length > 0) {
 
-          let x :colper = <colper>{PeriodName: period.Name, IsSend:period.Absence[0].IsSendMessage};
+          let x: colper = <colper>{ PeriodName: period.Name, IsSend: period.Absence[0].IsSendMessage };
           this.dataSource.push(x);
 
         }
-
       }
 
 
@@ -125,7 +114,7 @@ export class StudentPickComponent implements OnInit {
     const students = await this.dsa.getStudents(this.groupInfo.type, this.groupInfo.id, this.today);
     this.studentChecks = [];
 
-    const c = await this.gadget.getContract("1campus.mobile.v2.teacher");
+    const c = await this.gadget.getContract("1campus.dylan.teacher.test");
     const session = await c.send("DS.Base.Connect", { RequestSessionID: '' });
     console.log(session.SessionID);
 
@@ -243,17 +232,32 @@ export class StudentPickComponent implements OnInit {
     } finally {
 
       dialog.close();
+      // console.log(this.periodConf.Absence[0].IsSendMessage);
 
-      if (this.periodConf.Absence[0].IsSendMessage) {
+      //本節次是否能發送推播
+      if (this.periodConf.Absence[0].IsSendMessage == "t") {
 
         console.log("缺曠別:" + this.periodConf.Name + " 將會發送推播");
+        // console.log("導師自訂是否發送：" + this.CanSend);
 
-        console.log(this.CanSend);
-
+        // 教師決定是否推送
         if (this.CanSend) {
-          var breakfast = ["54159"]; //組織出學生ID清單
-          let message: string = "貴子弟『牛小佳』於『2018/11/14』<br>節次『升旗』被記錄為『遲到』<br>--已向校方請假可忽略此通知--<br>--感謝您關心孩子的最新狀態--";
-          this.SendMessage("課堂點名", message, breakfast)
+
+          //整理學生資料
+          for (let stud of this.studentChecks) {
+            if (stud.status) {
+
+              let message: string = `貴子弟『${stud.data.Name}』於『${this.today}』<br>節次『${this.periodConf.Name}』點名狀態為『${this.selectedAbsence}』<br>--已向校方請假可忽略此通知--<br>--感謝您關心孩子的最新狀態--`;
+              stud._message = message;
+
+            } else {
+
+              let message: string = `貴子弟『${stud.data.Name}』於『${this.today}』<br>節次『${this.periodConf.Name}』點名狀態為『已到』<br>--感謝您關心孩子的最新狀態--`;
+              stud._message = message;
+            }
+          }
+          await this.SendMessage("課堂點名", this.studentChecks)
+
         }
 
       } else {
@@ -270,35 +274,49 @@ export class StudentPickComponent implements OnInit {
     this.selectedAbsence = abbr.Name;
   }
 
-  public async SendMessage(eTitle: string, eMessage: string, eTargetStudent: string[]) {
+  public async SendMessage(eTitle: string, students: StudentCheck[]) {
 
+    const dialog = this.alert.waiting("訊息發送中...");
     try {
+
       this.contract = await this.gadget.getContract('1campus.notice.teacher.v17');
+    
+      for (let stud of students) {
+
+        if (stud.status) {
+          // <Request>
+          // <Title>上課準備</Title>
+          // <Message>明天上課請準備說故事</Message>
+          // <TargetStudent>54156</TargetStudent><!--TargetStudent是通知對象學生的StudentID-->
+          // </Request>
+          const req: any = {
+            Request: {
+              Title: eTitle,
+              Message: stud._message,
+              TargetStudent: stud.data.ID
+            }
+          };
+
+          //放此層,被點名者才會收到訊息
+          const rsp = await this.contract.send('PushNotice', req);
+        }
+      }
+      
+      //整理資料後,放此層,所有學生收都會收到訊息
+
     } catch (error) {
+
       console.log(error);
       throw error;
+
+    } finally {
+
+      console.log("訊息發送完成!!");
+      dialog.close();
+
     }
-
-    // <Request>
-    // <Title>上課準備</Title>
-    // <Message>明天上課請準備說故事</Message>
-    // <TargetStudent>54156</TargetStudent><!--TargetStudent是通知對象學生的StudentID-->
-    // </Request>
-    const req: any = {
-      Request: {
-        Title: eTitle,
-        Message: eMessage,
-        TargetStudent: eTargetStudent
-      }
-    };
-
-    console.log(req);
-
-    const rsp = await this.contract.send('PushNotice', req);
-    console.log(rsp);
   }
 
-  //開啟一個小畫面
   //顯示會發送的範本樣式
   private viewTemp1() {
 
@@ -306,9 +324,10 @@ export class StudentPickComponent implements OnInit {
 
   }
 
+  //顯示支援發送點名推播的節次
   private viewTemp2() {
 
-   this.dialog.open(this.viewPeriod);
+    this.dialog.open(this.viewPeriod);
 
   }
 }

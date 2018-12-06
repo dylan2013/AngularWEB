@@ -17,7 +17,7 @@ export class DSAService {
 
   private async initContract() {
     try {
-      this.contract = await this.gadget.getContract('1campus.mobile.v2.teacher');
+      this.contract = await this.gadget.getContract('1campus.dylan.teacher.test');
     } catch (error) {
       console.log(error);
       throw error;

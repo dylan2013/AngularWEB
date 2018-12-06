@@ -15,8 +15,9 @@
     <div class="alert alert-info fade show" role="alert" *ngIf="isSendMessage=='t'">
       <div class="d-flex flex-column">
 
-        <div>本節次支援課堂點名 即時推播</div>
-        <div>即時推播 會推送點名結果給學生家長(包含已到學生)</div>
+        <div>本節次『{{periodConf?.Name}}』支援課堂點名『即時推播』</div>
+        <div>即時推播 會推送『點名結果』給所有學生家長(包含已到學生)</div>
+        <div>家長可掌握學生已經到校 或 最指定節次之點名狀態(由行政端決定)</div>
         <div class="m-2">
           <mat-checkbox *ngIf="isSendMessage=='t'" [(ngModel)]="CanSend">發送點名結果給家長(取消勾選,則不會發送推播)</mat-checkbox>
         </div>
@@ -25,17 +26,16 @@
           <div><a href="javascript: void(0)" (click)="viewTemp2()">*.查看校定可發送推播之節次</a></div>
         </div>
       </div>
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-      </button>
     </div>
   </nav>
 
+  <!-- loading -->
   <ng-container *ngIf="!studentChecks; else elseTemplate">
     <div style="position:absolute;top:30%;left: 0px;right: 0px;text-align: center;">
       loading...
     </div>
   </ng-container>
+  <!--學生照片清單-->
   <ng-template #elseTemplate>
     <div class="d-flex flex-column-reverse flex-sm-row mb-3">
       <div class="btn-group dropdown mr-auto">
@@ -75,21 +75,23 @@
     </div>
   </ng-template>
 
+  <!--儲存鈕-->
   <ng-template #save>
     <button (click)="saveRollCall()" type="button" class="btn btn-lg btn-info">{{checkSummary? '儲存 (' + checkSummary
       +')': '儲存'}}</button>
   </ng-template>
 
+  <!-- 推播發送範本 -->
   <ng-template #t_message>
     <ng-container>
-      <div>點名未到：</div>
+      <div>課堂點名未到：</div>
       <div class="card p-2 m-2">
         <div>貴子弟『王同學』於『2015/05/11』</div>
-        <div>節次『升旗』被記錄為『遲到』</div>
+        <div>節次『升旗』點名狀態為『遲到』</div>
         <div>--已向校方請假可忽略此通知--</div>
         <div>--感謝您關心孩子的最新狀態--</div>
       </div>
-      <div>點名已到：</div>
+      <div>課堂點名已到：</div>
       <div class="card p-2 m-2">
         <div>貴子弟『王同學』於『2019/03/10』</div>
         <div>節次『升旗』點名狀態為『已到』</div>
@@ -97,9 +99,10 @@
       </div>
     </ng-container>
   </ng-template>
+  <!-- 校定可推播節次 -->
   <ng-template #t_period>
     <ng-container>
-      <table mat-table [dataSource]="dataSource1" class="mat-elevation-z8">
+      <table mat-table [dataSource]="dataSource1" class="mat-elevation-z8" style="width: 200px">
 
         <ng-container matColumnDef="PeriodName">
           <th mat-header-cell *matHeaderCellDef>節次名稱</th>
