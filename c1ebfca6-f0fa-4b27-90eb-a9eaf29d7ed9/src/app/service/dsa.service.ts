@@ -251,6 +251,7 @@ export interface PeriodConf {
   StartTime: string;
   Type: string;
   IsSendMessage: boolean;
+  IsSendClassRollcall: boolean;
   Absence: AbsenceConf[];
 
 }

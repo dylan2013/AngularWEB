@@ -12,23 +12,34 @@
         <li class="breadcrumb-item active" aria-current="page">{{groupInfo.name}}&nbsp;&nbsp;({{today}}：{{periodConf?.Name}})</li>
       </ng-template>
     </ol>
+    <div class="m-3"><a href="javascript: void(0)" (click)="viewTemp2()">(查看校定可發送推播之節次)</a></div>
     <div class="alert alert-info fade show" role="alert" *ngIf="isSendMessage=='t'">
       <div class="d-flex flex-column">
 
-        <div>本節次『{{periodConf?.Name}}』支援課堂點名『即時推播』</div>
-        <div>即時推播 會推送『點名結果』給所有學生家長(包含已到學生)</div>
-        <div>家長可掌握學生已經到校 或 最指定節次之點名狀態(由行政端決定)</div>
+        <div>節次『{{periodConf?.Name}}』支援『點名推播』</div>
+        <div>『點名推播』會推送『點名結果』給狀態為『缺課』的學生家長</div>
+        <div>家長可掌握學生的點名狀態(行政端可決定支援推播之節次)</div>
+        <div>教師保有確認發送權利,下方選項取消勾選,則不會發送推播</div>
         <div class="m-2">
-          <mat-checkbox *ngIf="isSendMessage=='t'" [(ngModel)]="CanSend">發送點名結果給家長(取消勾選,則不會發送推播)</mat-checkbox>
+          <mat-checkbox *ngIf="isSendMessage=='t'" [(ngModel)]="CanSend">發送點名結果給家長</mat-checkbox>
         </div>
-        <div class="flex-column">
-          <div><a href="javascript: void(0)" (click)="viewTemp1()">*.查看發送訊息樣板</a></div>
-          <div><a href="javascript: void(0)" (click)="viewTemp2()">*.查看校定可發送推播之節次</a></div>
+        <div><a href="javascript: void(0)" (click)="viewTemp1()">(查看發送訊息樣板)</a></div>
+      </div>
+    </div>
+    <div class="alert alert-info fade show" role="alert" *ngIf="isSendClassRollCall=='t'">
+      <div class="d-flex flex-column">
+
+        <div>節次『{{periodConf?.Name}}』支援『到離校推播』</div>
+        <div>『到離校推播』會推送『點名結果』給『所有』學生家長</div>
+        <div>家長可掌握學生是否已經到校(行政端可決定支援推播之節次)</div>
+        <div>教師保有確認發送權利,下方選項取消勾選,則不會發送推播</div>
+        <div class="m-2">
+          <mat-checkbox *ngIf="isSendClassRollCall=='t'" [(ngModel)]="CanSend">發送點名結果給家長</mat-checkbox>
         </div>
+        <div><a href="javascript: void(0)" (click)="viewTemp1()">(查看發送訊息樣板)</a></div>
       </div>
     </div>
   </nav>
-
   <!-- loading -->
   <ng-container *ngIf="!studentChecks; else elseTemplate">
     <div style="position:absolute;top:30%;left: 0px;right: 0px;text-align: center;">
@@ -101,19 +112,25 @@
   </ng-template>
   <!-- 校定可推播節次 -->
   <ng-template #t_period>
+    <div>點名推播：僅發送給未到之學生家長</div>
+    <div class="mb-2">到離校推播：發送給所有學生家長</div>
     <ng-container>
-      <table mat-table [dataSource]="dataSource1" class="mat-elevation-z8" style="width: 200px">
+      <table mat-table [dataSource]="dataSource1" class="mat-elevation-z8" style="width: 300px">
 
         <ng-container matColumnDef="PeriodName">
           <th mat-header-cell *matHeaderCellDef>節次名稱</th>
           <td mat-cell *matCellDef="let element"> {{element.PeriodName}} </td>
         </ng-container>
 
-        <ng-container matColumnDef="IsSend">
-          <th mat-header-cell *matHeaderCellDef>可否推播</th>
-          <td mat-cell *matCellDef="let element"> {{element.IsSend=='t'?'可發送':'無'}} </td>
+        <ng-container matColumnDef="IsMessage">
+          <th mat-header-cell *matHeaderCellDef>點名推播</th>
+          <td mat-cell *matCellDef="let element"> {{element.IsMessage=='t'?'可發送':'無'}} </td>
         </ng-container>
 
+        <ng-container matColumnDef="IsRollCall">
+          <th mat-header-cell *matHeaderCellDef>到離校推播</th>
+          <td mat-cell *matCellDef="let element"> {{element.IsRollCall=='t'?'可發送':'無'}} </td>
+        </ng-container>
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
       </table>

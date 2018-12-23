@@ -26,8 +26,10 @@ export class StudentPickComponent implements OnInit {
   checkSummary: string; // 目前點名狀態統計。
 
   isSendMessage: string;
+  isSendClassRollCall: string;
+
   CanSend: boolean;
-  displayedColumns: string[] = ['PeriodName', 'IsSend'];
+  displayedColumns: string[] = ['PeriodName', 'IsMessage', 'IsRollCall'];
   dataSource: any[];
   dataSource1: MatTableDataSource<any>;
 
@@ -72,20 +74,23 @@ export class StudentPickComponent implements OnInit {
         this.alert.json(error.message);
       }
 
-      // 當有假別預設選第1個
+      // 當有假別清單
       if (this.periodConf.Absence.length > 0) {
+        //預設選第1個
         this.selectedAbsence = this.periodConf.Absence[0].Name;
 
         //是否支援推播功能
         this.isSendMessage = this.periodConf.Absence[0].IsSendMessage;
+        //是否支援到離校通知
+        this.isSendClassRollCall = this.periodConf.Absence[0].IsSendClassRollcall;
+
+        //LOG功能
         if (this.isSendMessage == "t") {
-
-          console.log("yes");
-
-        }
-        else {
-          console.log("no");
-
+          console.log("支援推播功能");
+        } else if (this.isSendClassRollCall == "t") {
+          console.log("支援到離校通知功能");
+        } else {
+          console.log("不支援推播功能");
         }
       }
 
@@ -94,10 +99,11 @@ export class StudentPickComponent implements OnInit {
         p.Absence = [].concat(p.Absence || []);
       }
       this.dataSource = [];
+      console.log(Periods);
       for (let period of Periods) {
         if (period.Absence.length > 0) {
 
-          let x: colper = <colper>{ PeriodName: period.Name, IsSend: period.Absence[0].IsSendMessage };
+          let x: colper = <colper>{ PeriodName: period.Name, IsMessage: period.Absence[0].IsSendMessage, IsRollCall: period.Absence[0].IsSendClassRollcall };
           this.dataSource.push(x);
 
         }
@@ -235,9 +241,9 @@ export class StudentPickComponent implements OnInit {
       // console.log(this.periodConf.Absence[0].IsSendMessage);
 
       //本節次是否能發送推播
-      if (this.periodConf.Absence[0].IsSendMessage == "t") {
+      if (this.periodConf.Absence[0].IsSendClassRollcall == "t") {
 
-        console.log("缺曠別:" + this.periodConf.Name + " 將會發送推播");
+        console.log("缺曠別:" + this.periodConf.Name + " 將會發送[到離校]推播");
         // console.log("導師自訂是否發送：" + this.CanSend);
 
         // 教師決定是否推送
@@ -260,13 +266,34 @@ export class StudentPickComponent implements OnInit {
 
         }
 
+      } else if (this.periodConf.Absence[0].IsSendMessage == "t") {
+
+        console.log("缺曠別:" + this.periodConf.Name + " 將會發送[課堂點名]推播");
+        // console.log("導師自訂是否發送：" + this.CanSend);
+
+        // 教師決定是否推送
+        if (this.CanSend) {
+
+          //整理學生資料
+          for (let stud of this.studentChecks) {
+            if (stud.status) {
+
+              let message: string = `貴子弟『${stud.data.Name}』於『${this.today}』<br>節次『${this.periodConf.Name}』點名狀態為『${this.selectedAbsence}』<br>--已向校方請假可忽略此通知--<br>--感謝您關心孩子的最新狀態--`;
+              stud._message = message;
+
+            } else {
+
+              let message: string = `貴子弟『${stud.data.Name}』於『${this.today}』<br>節次『${this.periodConf.Name}』點名狀態為『已到』<br>--感謝您關心孩子的最新狀態--`;
+              stud._message = message;
+            }
+          }
+          await this.SendMessage("課堂點名", this.studentChecks)
+        }
+
       } else {
-
         console.log("不需發送推播");
-
       }
     }
-
   }
 
   selectedAbsenceItem(abbr) {
@@ -280,7 +307,7 @@ export class StudentPickComponent implements OnInit {
     try {
 
       this.contract = await this.gadget.getContract('1campus.notice.teacher.v17');
-    
+
       for (let stud of students) {
 
         if (stud.status) {
@@ -301,7 +328,7 @@ export class StudentPickComponent implements OnInit {
           const rsp = await this.contract.send('PushNotice', req);
         }
       }
-      
+
       //整理資料後,放此層,所有學生收都會收到訊息
 
     } catch (error) {
@@ -336,7 +363,9 @@ export class colper {
 
   public PeriodName: string;
 
-  public IsSend: string;
+  public IsMessage: string;
+
+  public IsRollCall: string;
 }
 
 export interface AttendanceMessage {
