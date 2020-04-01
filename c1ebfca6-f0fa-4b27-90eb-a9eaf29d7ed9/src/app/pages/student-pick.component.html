@@ -12,17 +12,16 @@
         <li class="breadcrumb-item active" aria-current="page">{{groupInfo.name}}&nbsp;&nbsp;({{today}}：{{periodConf?.Name}})</li>
       </ng-template>
     </ol>
-    <div class="m-3"><a href="javascript: void(0)" (click)="viewTemp2()">(查看校定可發送推播之節次)</a></div>
     <div class="alert alert-info fade show" role="alert" *ngIf="isSendMessage=='t'">
       <div class="d-flex flex-column">
 
         <div>節次『{{periodConf?.Name}}』支援『點名推播』</div>
-        <div>『點名推播』會推送『點名結果』給狀態為『缺課』的學生家長</div>
-        <div>家長可掌握學生的點名狀態(行政端可決定支援推播之節次)</div>
-        <div>教師保有確認發送權利,下方選項取消勾選,則不會發送推播</div>
+        <div>可推送『點名結果』給狀態為『缺曠』的學生家長</div>
+        <div>請確認是否發送推播：</div>
         <div class="m-2">
           <mat-checkbox *ngIf="isSendMessage=='t'" [(ngModel)]="CanSend">發送點名結果給家長</mat-checkbox>
         </div>
+        <div><a href="javascript: void(0)" (click)="viewTemp2()">(查看校定可發送推播之節次)</a></div>
         <div><a href="javascript: void(0)" (click)="viewTemp1()">(查看發送訊息樣板)</a></div>
       </div>
     </div>
@@ -30,12 +29,12 @@
       <div class="d-flex flex-column">
 
         <div>節次『{{periodConf?.Name}}』支援『到離校推播』</div>
-        <div>『到離校推播』會推送『點名結果』給『所有』學生家長</div>
-        <div>家長可掌握學生是否已經到校(行政端可決定支援推播之節次)</div>
-        <div>教師保有確認發送權利,下方選項取消勾選,則不會發送推播</div>
+        <div>可推送『點名結果』給『所有』學生家長</div>
+        <div>請確認是否發送推播：</div>
         <div class="m-2">
           <mat-checkbox *ngIf="isSendClassRollCall=='t'" [(ngModel)]="CanSend">發送點名結果給家長</mat-checkbox>
         </div>
+        <div><a href="javascript: void(0)" (click)="viewTemp2()">(查看校定可發送推播之節次)</a></div>
         <div><a href="javascript: void(0)" (click)="viewTemp1()">(查看發送訊息樣板)</a></div>
       </div>
     </div>
@@ -112,8 +111,8 @@
   </ng-template>
   <!-- 校定可推播節次 -->
   <ng-template #t_period>
-    <div>點名推播：僅發送給未到之學生家長</div>
-    <div class="mb-2">到離校推播：發送給所有學生家長</div>
+    <div>✦點名推播：僅發送給未到之學生家長</div>
+    <div class="mb-2">✦到離校推播：發送給所有學生家長</div>
     <ng-container>
       <table mat-table [dataSource]="dataSource1" class="mat-elevation-z8" style="width: 300px">
 
