@@ -1,0 +1,35 @@
+<div>
+    <div *ngIf="loading" class="alert alert-info">資料載入中...</div>
+    <h6 class="alert alert-info" role="alert">體溫紀錄趨勢圖(最新15筆)<button type="button" class="btn btn-primary" style="margin-left: 20px;">我要自主回報</button></h6>
+    <canvas id="myChart" class="chartjs" width="700" height="400"></canvas>
+    <div *ngIf="!loading">
+        <div *ngIf="!error">
+            <table class="table table-striped table-hover" style="width:100%">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">登錄</th>
+                        <th scope="col">量測</th>
+                        <th scope="col">類別</th>
+                        <th scope="col">地點</th>
+                        <th scope="col">體溫</th>
+                        <th scope="col">方式</th>
+                        <th scope="col">備註</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let country of temperature">
+                        <td>{{ parseLDate(country.LastUpdate) }}</td>
+                        <td>{{ parseLDate(country.OccurDate) }}</td>
+                        <td>{{ country.Category}}</td>
+                        <td>{{ country.Location}}</td>
+                        <td>{{ country.BodyTemperature | number }}</td>
+                        <td>{{ country.MeasurementMethod  }}</td>
+                        <td>{{ country.Remark  }}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <app-pagging></app-pagging>
+        </div>
+        <pre *ngIf="error" class="alert alert-danger">發生錯誤：<br/>{{error | json}}</pre>
+    </div>
+</div>

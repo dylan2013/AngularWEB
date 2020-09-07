@@ -1,0 +1,653 @@
+/* ---------------------------------------------------
+    以 Material v4.1.1 為基礎，變更或新增 style
+    http://daemonite.github.io/material/
+----------------------------------------------------- */
+
+html,
+body {
+	height: 100%;
+	font-size: 1rem;
+}
+
+a {
+	color: #869923;
+}
+
+a:hover {
+	color: #73831F;
+}
+
+.btn-link:hover {
+	background: rgba(0, 0, 0, .12);
+	text-decoration: none;
+}
+
+.navbar-brand {
+	font-weight: normal;
+}
+
+.breadcrumb-item.active {
+	font-weight: 500;
+}
+
+h5,
+.h5 {
+	font-weight: 500;
+}
+
+.row {
+	margin-left: 0;
+	margin-right: 0;
+}
+
+.col-1,
+.col-2,
+.col-3,
+.col-4,
+.col-5,
+.col-6,
+.col-7,
+.col-8,
+.col-9,
+.col-10,
+.col-11,
+.col-12,
+.col,
+.col-auto,
+.col-sm-1,
+.col-sm-2,
+.col-sm-3,
+.col-sm-4,
+.col-sm-5,
+.col-sm-6,
+.col-sm-7,
+.col-sm-8,
+.col-sm-9,
+.col-sm-10,
+.col-sm-11,
+.col-sm-12,
+.col-sm,
+.col-sm-auto,
+.col-md-1,
+.col-md-2,
+.col-md-3,
+.col-md-4,
+.col-md-5,
+.col-md-6,
+.col-md-7,
+.col-md-8,
+.col-md-9,
+.col-md-10,
+.col-md-11,
+.col-md-12,
+.col-md,
+.col-md-auto,
+.col-lg-1,
+.col-lg-2,
+.col-lg-3,
+.col-lg-4,
+.col-lg-5,
+.col-lg-6,
+.col-lg-7,
+.col-lg-8,
+.col-lg-9,
+.col-lg-10,
+.col-lg-11,
+.col-lg-12,
+.col-lg,
+.col-lg-auto,
+.col-xl-1,
+.col-xl-2,
+.col-xl-3,
+.col-xl-4,
+.col-xl-5,
+.col-xl-6,
+.col-xl-7,
+.col-xl-8,
+.col-xl-9,
+.col-xl-10,
+.col-xl-11,
+.col-xl-12,
+.col-xl,
+.col-xl-auto {
+	padding-right: 4px;
+	padding-left: 4px;
+}
+
+.nav-tabs .nav-link.active {
+	color: #869923;
+}
+
+.nav-tabs .nav-link::before {
+	background-color: #869923;
+}
+
+.nav-tabs-material .nav-tabs-indicator {
+	background-color: #869923;
+}
+
+.form-control:focus,
+.form-control:hover {
+	border-color: #869923;
+	box-shadow: inset 0 -2px 0 -1px #869923;
+}
+
+select.form-control:focus[multiple],
+select.form-control:focus[size],
+textarea.form-control:focus:not(.textarea-autosize),
+.custom-select:focus[multiple],
+.custom-select:focus[size] {
+	box-shadow: inset 2px 2px 0 -1px #869923, inset -2px -2px 0 -1px #869923;
+}
+
+.custom-file-input:focus~.custom-file-label,
+.custom-file-input:hover~.custom-file-label {
+	border-bottom-color: #869923;
+	box-shadow: inset 0 -2px 0 -1px #869923;
+}
+
+@media screen and (max-width: 720px) {
+	.btn {
+		white-space: normal;
+	}
+}
+
+.nav-pills .nav-link {
+	border: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.nav-pills .nav-link.active {
+	color: rgba(0, 0, 0, 0.87);
+	font-weight: 500;
+	border: 1px solid rgba(0, 0, 0, 0);
+	background-color: rgba(0, 0, 0, 0.12);
+}
+
+.kd-t, .kd-t>thead td, .kd-t>thead th {
+	font-size: .875rem;
+	color: #212529;
+	font-weight: normal;
+}
+
+.kd-t>thead td, .kd-t>thead th {
+	background-color: #f8f9fa;
+}
+
+.kd-t>thead td, .kd-t>thead th, .kd-t>tbody td {
+	border-width: 0 0 1px 1px;
+	border-style: solid;
+	border-color: inherit;
+}
+
+.kd-t>tbody td {
+	border-bottom: 0;
+}
+
+.kd-t>thead td:first-child, .kd-t>thead th:first-child {
+	border-left-width: 0;
+}
+
+.kd-t>thead td:last-child, .kd-t>thead th:last-child, .kd-t>tbody tr:first-child td:last-child {
+	width: 48px;
+	padding: 0.919643rem 0;
+}
+
+.kd-t>tbody tr:nth-of-type(even) {
+	border-top: 1px solid #e1e1e1;
+	border-bottom: 1px solid #e1e1e1;
+}
+
+.kd-t>tbody:nth-of-type(even) tr:first-child {
+	background-color: #f8f9fa;
+}
+
+.kd-t>tbody>tr:first-child {
+	cursor: pointer;
+}
+
+.kd-t table tbody tr:first-child td:last-child {
+	padding: 0.919643rem 1.75rem;
+}
+
+.table .thead-gray td, .table .thead-gray th {
+	background: #e4e7eb;
+}
+
+.table-gray, .table-gray>td, .table-gray>th {
+	background-color: #e8e8e8;
+	color: rgba(0,0,0,.87);
+}
+
+
+/* ---------------------------------------------------
+    Material Icons
+----------------------------------------------------- */
+
+/* Rules for sizing the icon. */
+.material-icons.md-18 { font-size: 18px; }
+.material-icons.md-24 { font-size: 24px; }
+.material-icons.md-36 { font-size: 36px; }
+.material-icons.md-48 { font-size: 48px; }
+
+/* Rules for using icons as black on a light background. */
+.material-icons.md-dark { color: rgba(0, 0, 0, 0.54); }
+.material-icons.md-dark.md-inactive { color: rgba(0, 0, 0, 0.26); }
+
+/* Rules for using icons as white on a dark background. */
+.material-icons.md-light { color: rgba(255, 255, 255, 1); }
+.material-icons.md-light.md-inactive { color: rgba(255, 255, 255, 0.3); }
+
+/* ---------------------------------------------------
+    自訂廣泛使用 Class Style
+----------------------------------------------------- */
+
+.cbs {
+	padding-top: 16px;
+	height: 100%;
+}
+
+.text-normal {
+	white-space: normal !important;
+}
+
+.seat-no {
+	min-width: 20px;
+}
+
+.adoption-seat-no {
+	min-width: 88px;
+}
+
+.shadow {
+	-webkit-box-shadow: 0 1px 20px 0 rgba(0, 0, 0, .16);
+	box-shadow: 0 1px 20px 0 rgba(0, 0, 0, .16);
+}
+
+.point {
+	cursor: pointer;
+}
+
+.text-gray {
+	color: rgba(0, 0, 0, 0.54) !important;
+}
+
+.text-brown {
+	color: #5B483A !important;
+}
+
+.bg-cyan {
+  background-color: #d9eaea !important;
+}
+
+a.text-brown:active,
+a.text-brown:focus,
+a.text-brown:hover {
+	color: #4D3D31 !important;
+}
+
+.card.border-brown {
+	box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.14), 0 3px 4px 0 rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2), inset 0 0 0 1px #5B483A;
+}
+
+.border-brown {
+	border-color: #5B483A !important;
+}
+
+.text-green {
+	color: #869923 !important;
+}
+
+a.text-green:active,
+a.text-green:focus,
+a.text-green:hover {
+	color: #73831F !important;
+}
+
+.card.border-green {
+	box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.14), 0 3px 4px 0 rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2), inset 0 0 0 1px #869923;
+}
+
+.border-green {
+	border-color: #869923 !important;
+}
+
+.list-group-item-pink {
+	background-color: #FFCDD3;
+	color: rgba(0, 0, 0, 0.87);
+}
+
+.bt-auto {
+	min-width: auto;
+}
+
+.custom-radio.radio-dropdown .custom-control-label::after {
+	line-height: 2.3rem;
+}
+
+.radio-dropdown .custom-control-label::before {
+	top: 6px;
+}
+
+.nav-list a.active {
+	position: relative;
+}
+
+.nav-list a.active::after {
+	font-family: 'Material Icons';
+	content: 'chevron_right';
+	color: rgba(0, 0, 0, 0.54);
+	margin-left: auto;
+	font-size: 1.714286em;
+  line-height: 0.8em;
+}
+
+li.list-group-item label {
+	display: block;
+	color: rgba(0,0,0,.54);
+	font-size: 0.9375rem;
+	margin-bottom: 0.25rem;
+}
+
+/* #reward .badge {
+	min-width: 33px;
+	text-align: center;
+	display: inline-block;
+} */
+
+.reward .nav-item {
+	flex: 1;
+}
+
+.reward .nav-link {
+	display: -ms-flexbox !important;
+	display: flex !important;
+	-ms-flex-direction: column !important;
+	flex-direction: column !important;
+	text-align: center;
+}
+
+.reward .nav-link .badge {
+	display: block;
+}
+
+.reward li {
+	margin-right: 0.25rem;
+}
+
+.reward li:last-child {
+	margin-right: 0;
+}
+
+.sub-title {
+	min-height: 37px;
+}
+
+#absence .badge {
+	min-width: 44px;
+	display: inline-block;
+}
+
+.table tbody td, .table tbody th {
+	font-size: inherit;
+	text-align: center;
+}
+
+.table thead td, .table thead th {
+	white-space: nowrap;
+	text-align: center;
+}
+
+.score .table {
+	border: 1px solid #dddddd;
+}
+
+.score .table thead th, .score .table tbody th {
+	font-weight: 500;
+}
+
+.score .table thead td, .score .table thead th, .score .table tbody td, .score .table tbody th {
+	white-space: nowrap;
+	border-left: 1px solid #dddddd;
+	vertical-align: middle;
+	padding: 1.214285rem 0.75rem;
+}
+
+.score .fail {
+	background: #ffcdd2;
+	color: #f44336;
+}
+
+/* ---------------------------------------------------
+    Responsive UL Tab
+----------------------------------------------------- */
+
+.rwd-tab {
+	margin-top: 15px;
+	min-height: 48px;
+}
+
+.rwd-tab ul {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	border-bottom: 1px solid #ccc;
+	text-align: center;
+}
+
+.rwd-tab li {
+	/* display: inline-block;
+	padding: 0;
+	vertical-align: bottom;
+	margin-right: 15px; */
+	-ms-flex-positive: 1;
+	-ms-flex-preferred-size: 0;
+	flex-basis: 0;
+	flex-grow: 1;
+	text-align: center;
+}
+
+.rwd-tab a:active, .rwd-tab a:focus, .rwd-tab a:hover {
+  background-color: rgba(0, 0, 0, 0.12);
+}
+
+.rwd-tab a {
+	text-decoration: none;
+	display: block;
+	color: rgba(0,0,0,.87);
+	font-size: .875rem;
+	font-weight: 500;
+	line-height: 1;
+	min-height: 3rem;
+	opacity: .7;
+	padding: 1.0625rem .75rem;
+	position: relative;
+	text-transform: uppercase;
+	transition-duration: .3s;
+	transition-property: background-color,color,opacity;
+	transition-timing-function: cubic-bezier(.4,0,.2,1);
+	transition-duration: .2s;
+}
+
+.rwd-tab a::before {
+  background-color: #869923;
+  content: '';
+  display: block;
+  height: 0.125rem;
+  opacity: 0;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  transition-duration: 0.3s;
+  transition-property: opacity;
+	transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+	transition: none;
+	transition-duration: .2s;
+}
+
+.rwd-tab a.active {
+	color: #869923;
+	opacity: 1;
+}
+
+.rwd-tab a.active::before {
+  opacity: 1;
+}
+
+.tabs>div {
+	display: none;
+	padding: 1rem;
+}
+
+.tabs>.active {
+	display: block;
+}
+
+@media (max-width: 575px) {
+	.rwd-tab ul {
+		position: relative;
+		background: #fff;
+		border: none;
+
+	}
+
+	.rwd-tab ul::after {
+		content: "menu";
+		position: absolute;
+		top: 12px;
+		right: 15px;
+		z-index: 2;
+		pointer-events: none;
+		font-size: 17px;
+		font-family: "Material Icons";
+	}
+
+	.rwd-tab li {
+		display: block;
+	}
+
+	.rwd-tab a {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		border-color: transparent;
+	}
+
+	.rwd-tab ul.open a {
+		position: relative;
+		display: block;
+		border-color: #fe8026;
+	}
+
+	.rwd-tab a.active {
+		z-index: 1;
+		background: #fff;
+
+	}
+}
+
+
+/* ---------------------------------------------------
+    Responsive UL Table
+----------------------------------------------------- */
+
+ul.rwd-table {
+	padding: 0;
+	margin: 0;
+	list-style: none;
+	box-sizing: border-box;
+	font-size: 0.9375rem;
+}
+
+ul.rwd-table {
+	width: 100%;
+	display: table;
+	margin: 1rem auto;
+	border-collapse: collapse;
+}
+
+ul.rwd-table .thead {
+	display: table-header-group;
+}
+
+ul.rwd-table .tr {
+	display: table-row;
+}
+
+ul.rwd-table .tbody {
+	display: table-row-group;
+}
+
+ul.rwd-table .thead li,
+ul.rwd-table .tr li {
+	display: table-cell;
+	padding: .919643rem;
+	text-align: center;
+	border: 1px solid rgba(0, 0, 0, 0.12);
+	white-space: nowrap;
+}
+
+ul.rwd-table .thead li {
+	text-align: center;
+	font-weight: bold;
+	background: rgba(0, 0, 0, 0.12);
+}
+
+ul.rwd-table .tbody ol:hover {
+	background: rgba(0, 0, 0, 0.08);
+}
+
+ul.rwd-table ol:nth-child(even) {
+	background: #f5f5f5;
+}
+
+@media only screen and (max-width:768px) {
+	ul.rwd-table .thead {
+		display: none;
+	}
+
+	ul.rwd-table .tr {
+		display: block;
+		border: #ddd 1px solid;
+		margin-bottom: 5px;
+		padding-left: 0;
+	}
+
+	ul.rwd-table .tr li {
+		display: flex;
+		width: 100%;
+		border: none;
+		text-align: left;
+		-ms-flex-align: stretch !important;
+		align-items: stretch !important;
+	}
+
+	ul.rwd-table .tr li:before {
+		content: attr(data-title);
+		display: flex;
+		width: auto;
+		min-width: 80px;
+		font-weight: 900;
+		padding-right: 1rem;
+	}
+}
+
+
+/* ---------------------------------------------------
+    水平垂直置中
+    Bootstrap v4.1.1 四個 class 組成
+    d-flex flex-column justify-content-center align-items-center
+----------------------------------------------------- */
+
+.flex-justify-align-center {
+	display: -ms-flexbox;
+	display: flex;
+	-ms-flex-direction: column !important;
+	flex-direction: column !important;
+	-ms-flex-pack: center !important;
+	justify-content: center !important;
+	-ms-flex-align: center !important;
+	align-items: center !important;
+}

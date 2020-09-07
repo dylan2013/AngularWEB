@@ -1,0 +1,20 @@
+ <!--分頁開始-->
+ <span><button (click)="this.setPgNum(1)">第一頁</button></span>
+ <span *ngIf="(this.svcPagging.startPg-10)>=1">
+   <button (click)="this.setPgNum(this.svcPagging.startPg-1)">...{{this.svcPagging.startPg-1}}</button>
+ </span>
+ <span *ngFor="let pn of this.svcPagging.pageNumArray">
+   <button (click)="this.setPgNum(pn)" [ngClass]="{currentPage: pn==this.svcPagging.currentPageNum}">{{pn}}</button>
+ </span>
+ <span *ngIf="svcPagging.pageNumArrayMax < svcPagging.totalPage">
+   <button (click)="this.setPgNum(svcPagging.pageNumArrayMax+1)">{{svcPagging.pageNumArrayMax+1}}...</button>
+ </span>
+ <span><button (click)="this.setPgNum(svcPagging.totalPage)">最後一頁</button></span>
+ 每頁筆數：
+ <select name="sltPageSize" id="sltPageSize" (change)="this.setPgSize()">
+   <option value="5">5</option>
+   <option value="10">10</option>
+   <option value="15">15</option>
+   <option value="20">20</option>
+ </select>
+ <!--分頁結束-->

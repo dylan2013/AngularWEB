@@ -1,20 +1,8 @@
-<div>
-    <h1 class="mat-display-1">
-        <i class="fa fa-bell"></i>{{head}}
-    </h1>
+<div class="container-fluid cbs d-flex justify-content-between flex-column">
 
-    <ul>
-        <li *ngFor="let lang of langs">{{lang}}</li>
-    </ul>
+    <router-outlet></router-outlet>
 
-    <div *ngIf="loading" class="alert alert-info">資料載入中...</div>
-
-    <div *ngIf="!loading">
-        <div *ngIf="!error">
-            <h2 class="alert alert-success">已連接: {{accessPoint}}</h2>
-            <h2>學校資訊：</h2>
-            <pre class="alert alert-success">{{schoolInfo | json}}</pre>
-        </div>
-        <pre *ngIf="error" class="alert alert-danger">發生錯誤：<br/>{{error | json}}</pre>
-    </div>
+    <footer class="text-center p-2 mt-auto">
+        Powered By ischool
+    </footer>
 </div>
