@@ -1,3 +1,4 @@
+import { MainComponent } from './pages/main.component';
 import { GadgetService } from './service/gadget.service';
 import { DSAService } from './service/dsa.service';
 import { PaggingService } from './service/pagging.service';
@@ -14,7 +15,7 @@ import { PaggingComponent } from './pagging/pagging.component';
   declarations: [
     AppComponent,
     PaggingComponent,
-    AppRoutingModule
+    MainComponent
   ],
   imports: [
     BrowserModule,
